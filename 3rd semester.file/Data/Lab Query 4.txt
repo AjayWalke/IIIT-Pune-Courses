@@ -1,0 +1,59 @@
+------------ Problem 2 --------------
+CREATE TABLE Movies(
+ Code NUMBER primary key,
+ Title VARCHAR(255),
+ Rating VARCHAR(255)
+);
+CREATE TABLE MovieTheaters(
+ Code NUMBER(10) primary key,
+ Name VARCHAR(255),
+ Movie NUMBER(10) REFERENCES Movies(Code)
+);
+DESC Movies;
+DESC MovieTheaters;
+INSERT INTO Movies(Code, Title, Rating) VALUES(11,'Dangal','GOOD');
+INSERT INTO Movies(Code, Title, Rating) VALUES(12,'Singham','BEST');
+INSERT INTO Movies(Code, Title, Rating) VALUES(13,'DDLJ',NULL);
+INSERT INTO Movies(Code, Title, Rating) VALUES(14,'Justice League', 'Blockbuster');
+INSERT INTO Movies(Code, Title, Rating) VALUES(15,'Avengers','Good');
+INSERT INTO Movies(Code, Title, Rating) VALUES(16,'Raees','Flop');
+INSERT INTO Movies(Code, Title, Rating) VALUES(17,'Zero','Superflop');
+INSERT INTO Movies(Code, Title, Rating) VALUES(18,'Dhamal',NULL);
+INSERT INTO Movies(Code, Title, Rating) VALUES(19,'Bahubali','AllTimeBlockbuster');
+INSERT INTO Movies(Code, Title, Rating) VALUES(20,'Dhamal 2','NC-17');
+INSERT INTO MovieTheaters(Code, Name, Movie) VALUES(1,'PVR',15);
+INSERT INTO MovieTheaters(Code, Name, Movie) VALUES(2,'Mangala',NULL);
+INSERT INTO MovieTheaters(Code, Name, Movie) VALUES(3,'Omega',12);
+INSERT INTO MovieTheaters(Code, Name, Movie) VALUES(4,'Swargate',11);
+INSERT INTO MovieTheaters(Code, Name, Movie) VALUES(5,'Shivajinagar',19);
+INSERT INTO MovieTheaters(Code, Name, Movie) VALUES(6,'Ampte',NULL);
+INSERT INTO MovieTheaters(Code, Name, Movie) VALUES(7,'Phoenix',16);
+INSERT INTO MovieTheaters(Code, Name, Movie) VALUES(8,'Vasant',13);
+INSERT INTO MovieTheaters(Code, Name, Movie) VALUES(9,'PVR 2',20);
+SELECT * FROM Movies;
+SELECT * FROM MovieTheaters;
+--> 6) Select all movie theaters that are not currently showing a movie.
+SELECT * FROM MovieTheaters 
+WHERE Movie IS NULL;
+--> 7) Add the unrated movie "One, Two, Three".
+INSERT INTO Movies(Title, Code) VALUES('One, Two, Three', 9);
+SELECT * FROM Movies;
+--> 8) Set the rating of all unrated movies to "G".
+UPDATE Movies SET Rating='G' WHERE Rating IS NULL;
+SELECT * FROM Movies;
+--> 9) Remove movie theaters projecting movies rated "NC-17".
+DELETE FROM MovieTheaters 
+ WHERE Movie IN
+ (
+ SELECT Code 
+ FROM Movies 
+ WHERE Rating = 'NC-17'
+ );
+SELECT *
+FROM Movies JOIN MovieTheaters
+ON MovieTheaters.Movie = Movies.Code
+--> 10) Show the titles of movies not currently being shown in any theaters.
+SELECT Movies.Title
+FROM MovieTheaters RIGHT JOIN Movies
+ON MovieTheaters.Movie = Movies.Code
+WHERE MovieTheaters.Movie IS NULL;
