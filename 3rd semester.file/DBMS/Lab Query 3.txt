@@ -1,0 +1,68 @@
+------------- Problems 1-5 -------------
+CREATE TABLE Warehouses(
+ Code NUMBER primary key,
+ Location VARCHAR(255),
+ Capacity NUMBER(10)
+);
+CREATE TABLE Boxes (
+ Code VARCHAR(255) primary key,
+ Contents VARCHAR(255),
+ Value NUMBER(10),
+ Warehouse NUMBER(10) REFERENCES Warehouses(Code)
+);
+DESC Warehouses;
+DESC Boxes;
+INSERT INTO Warehouses(Code, Location, Capacity) VALUES(11,'Delhi',58);
+INSERT INTO Warehouses(Code, Location, Capacity) VALUES(12,'Mumbai',34);
+INSERT INTO Warehouses(Code, Location, Capacity) VALUES(13,'Pune',49);
+INSERT INTO Warehouses(Code, Location ,Capacity) VALUES(14,'Chennai',98);
+INSERT INTO Warehouses(Code, Location ,Capacity) VALUES(15,'Karachi',68);
+INSERT INTO Boxes(Code, Contents, Value, Warehouse) VALUES('M101','Books',999,15);
+INSERT INTO Boxes(Code, Contents, Value, Warehouse) VALUES('M102','Bat',99,12);
+INSERT INTO Boxes(Code, Contents, Value, Warehouse) VALUES('M103','Stone',950,11);
+INSERT INTO Boxes(Code, Contents, Value, Warehouse) VALUES('M104','Table',880,14);
+INSERT INTO Boxes(Code, Contents, Value, Warehouse) VALUES('M105','Chair',940,11);
+INSERT INTO Boxes(Code, Contents, Value, Warehouse) VALUES('M106','Dryer',936,13);
+INSERT INTO Boxes(Code, Contents, Value, Warehouse) VALUES('M107','Door',759,12);
+INSERT INTO Boxes(Code, Contents, Value, Warehouse) VALUES('M108','Stone',695,13);
+INSERT INTO Boxes(Code, Contents, Value, Warehouse) VALUES('M109','Bat',687,14);
+INSERT INTO Boxes(Code, Contents, Value, Warehouse) VALUES('M110','Paper',900,15);
+SELECT * FROM Boxes;
+SELECT * FROM Warehouses;
+--> 1) Select all boxes with a value larger than $150.
+select * from boxes where Value>150;
+--> 2) Select the warehouse code and the average value of the boxes in each 
+ warehouse.
+select warehouse, avg(value) from boxes group by warehouse;
+--> 3) Reduce the value of all boxes by 15%.
+update boxes
+set value = value * 0.85;
+SELECT * FROM Boxes;
+--> 4) Select the codes of all warehouses that are saturated
+SELECT Code
+ FROM Warehouses
+ WHERE Capacity <
+ (
+ SELECT COUNT(*)
+ FROM Boxes
+ WHERE Warehouse = Warehouses.Code
+ );
+--> 5) Remove all boxes from saturated warehouses.
+delete from boxes
+where warehouse in
+(
+SELECT Code
+ FROM Warehouses
+ WHERE Capacity <
+ (
+ SELECT COUNT(*)
+ FROM Boxes
+ WHERE Warehouse = Warehouses.Code
+ )
+);
+
+
+
+
+
+
